@@ -71,6 +71,7 @@ data class CheckMsgRequest(
     val data: Gson?,
     val error_code: Long?,
     val error_msg: String?
+
 )
 
 fun checkImageURL(url: String): Boolean {
