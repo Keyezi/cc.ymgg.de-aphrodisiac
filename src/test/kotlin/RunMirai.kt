@@ -16,7 +16,7 @@ suspend fun main() {
     PluginMain.load()
     PluginMain.enable()
 
-    val bot = MiraiConsole.addBot(246463104, "test234") {
+    val bot = MiraiConsole.addBot(246463104, "") {
         fileBasedDeviceInfo()
     }.alsoLogin()
    // bot.getGroup(1041524354)?.settings?.isMuteAll = true
