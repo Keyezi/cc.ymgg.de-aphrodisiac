@@ -10,12 +10,19 @@ mirai {
     coreVersion = "2.3.2" // mirai-core version
 }
 
-group = "org.example"
-version = "0.1.0"
+group = "cc.ymgg"
+version = "2.0"
 
 repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
     maven("https://dl.bintray.com/kotlin/kotlin-eap")
+}
+dependencies{
+    implementation ("com.squareup.okhttp3:okhttp:4.1.0")
+    implementation("com.google.code.gson:gson:2.8.5")
+    implementation ("com.alibaba:fastjson:1.2.75")
+
+
 }
