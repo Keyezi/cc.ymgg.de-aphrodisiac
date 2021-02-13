@@ -19,7 +19,7 @@ suspend fun main() {
     MiraiPluginMain.enable()
 
     @Suppress("UNUSED_VARIABLE")
-    val bot = MiraiConsole.addBot(246463104, "我不是密码") {
+    val bot = MiraiConsole.addBot(246463104, "我不是密码123") {
         fileBasedDeviceInfo()
     }.alsoLogin()
     // bot.getGroup(1041524354)?.settings?.isMuteAll = true
