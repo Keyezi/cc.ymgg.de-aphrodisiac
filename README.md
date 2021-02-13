@@ -5,7 +5,7 @@ Nd鉴黄初次使用说明
 
 首先，您需要打入指令 /changelevel <Value>调整您需要的鉴定级别
   
-  /<Value/>：疑似 3 不合规 2
+  \<Value\>：疑似 3 不合规 2
     
 其次您需要输入/regin <client_id> <client_secret> 来获取Accesstoken.
 
