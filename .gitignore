@@ -2,7 +2,6 @@
 /.gradle/
 /build/
 /.idea/
-/test/
 /out/
 /run/
-/src/test/
+
