@@ -1,29 +1,45 @@
-package org.example.mirai.plugin
+package cc.ymgg.deaphrodisac.checker
 
+import cc.ymgg.deaphrodisac.setting.Compliance_level
+import cc.ymgg.deaphrodisac.setting.Config
+import cc.ymgg.deaphrodisac.setting.Suspected_level
+import cc.ymgg.deaphrodisac.setting.isNormalRunning
+import cc.ymgg.deaphrodisac.tools.Log
 import com.alibaba.fastjson.JSON
 import com.google.gson.Gson
-import net.mamoe.mirai.message.data.MessageChain
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.net.URLEncoder
 
 
-class BaiduChecker(client_id: String? = "", client_secret: String? = "") {
-    private var Check_level = 2
-    private var accessToken: String
+object BaiduChecker {
+
+    private lateinit var accessToken: String
 
     init {
-        accessToken = getAccessToken(client_id!!, client_secret!!)
+        println()
+        // refreshAccessToken()//TODO:导入config
     }
 
-    fun getAccessToken(client_id: String, client_secret: String): String {
+    /**外部方法，刷新AccessToken*/
+    fun refreshAccessToken() {
+        accessToken = getAccessToken(Config.API_KEY, Config.SECRET_KEY)
+    }
 
-        @Suppress("SENSELESS_COMPARISON")//沙口IDEA
-        if ((client_id == null) or (client_secret == null)) {
-            Log.w("client_id或client_secret为空，请及时填写并通过指令重新读取，否则无法使用。")
-            isNormalRunning = false
-            return ""
+    /**通过2个从cloud.baidu.com获取的API密钥获取AccessTOken*/
+    private fun getAccessToken(client_id: String, client_secret: String): String {
+        //       Log.i(client_id,"ClinetId_getAccessToken")
+//        Log.i(client_secret,"Clinetsecret_getAccessToken")
+        when {
+            client_id != "" -> {
+            }
+            client_secret != "" -> {
+            }
+            else -> {
+                Log.w("client_id或client_secret为空，请及时填写并通过指令重新读取，否则无法使用。")
+                isNormalRunning = false
+                return ""
+            }
         }
 
         val Httpclient = OkHttpClient()
@@ -42,21 +58,15 @@ class BaiduChecker(client_id: String? = "", client_secret: String? = "") {
 
         val json = Gson()
         val result = json.fromJson(responseData, ApiKeyRequest::class.java)
-
-        @Suppress("USELESS_ELVIS")
-        return run {
-            Log.i("ApiKey读取成功。")
+        return if (result.access_token != null) {
+            Log.i("ApiKey读取成功，KEY:${result.access_token}")
             isNormalRunning = true
             result.access_token
-        } ?: run {
-            Log.w(
-                "ApiKey读取失败，以下是读取到的内容:$responseData",
-                "GetApiKey"
-            )
+        } else {
+            Log.w("ApiKey读取失败，以下是读取到的内容:$responseData", "GetApiKey")
             isNormalRunning = false
             ""
         }
-
     }
 
     data class ApiKeyRequest(
@@ -68,11 +78,16 @@ class BaiduChecker(client_id: String? = "", client_secret: String? = "") {
         val session_secret: String
     )
 
-
+    /**输入消息字符串
+     *
+     * 当审核出现问题返回真
+     *
+     * 当审核无问题或者出现网络错误返回假，并关闭应用处理直到成功refreshAccessToken*/
     fun checkmsg(Msg: String): Boolean {
+        Log.v(Msg, "checkmsg_Msg")
         val httpClient = OkHttpClient()
         val requestBody = FormBody.Builder()
-            .add("text", URLEncoder.encode(Msg, "UTF-8"))
+            .add("text", Msg)
             .build()
         val request = Request.Builder()
             .url("https://aip.baidubce.com/rest/2.0/solution/v1/text_censor/v2/user_defined?access_token=$accessToken")
@@ -80,13 +95,13 @@ class BaiduChecker(client_id: String? = "", client_secret: String? = "") {
             .build()
 
         val responseData = httpClient.newCall(request).execute().body!!.string() //假设访问一定成功,只要网络连接没毛病
-        println(responseData)
+        Log.v(responseData, "checkmsg_responseData")
         val json = JSON.parseObject(responseData)
         //TODO:完成对JSON错误处理
         return when (json.getIntValue("conclusionType")) {
             1 -> false
-            2 -> Check_level == Compliance_level    //不合规
-            3 -> Check_level == Suspected_level     //疑似
+            2 -> Config.checklevel == Compliance_level    //不合规
+            3 -> Config.checklevel == Suspected_level     //疑似
             4 -> {
                 //TODO:完成对访问错误的处理2
                 isNormalRunning = false
@@ -95,42 +110,54 @@ class BaiduChecker(client_id: String? = "", client_secret: String? = "") {
             }
             else -> {
                 //TODO:完成对网络error的处理2
+                isNormalRunning = false
                 false
             }
 
         }
     }
 
+    /**输入网络图片URL
+     *
+     * 当审核出现问题返回真
+     *
+     * 当审核无问题或者出现网络错误返回假，并关闭应用处理直到成功refreshAccessToken*/
     fun checkImageURL(url: String): Boolean {
+        Log.v(url, "checkImageURL_url")
         val Httpclient = OkHttpClient()
         val requestBody = FormBody.Builder()
-            .add("imgUrl", URLEncoder.encode(url, "UTF-8")).build()
+            .add("imgUrl", url)
+            .build()
+
         val request = Request.Builder()
             .url("https://aip.baidubce.com/rest/2.0/solution/v1/img_censor/v2/user_defined?access_token=$accessToken")
-            .post(requestBody).build()
+            .post(requestBody)
+            .build()
         val responseData =
             Httpclient.newCall(request).execute().body!!.string() //假设访问一定成功,只要网络连接没毛病
+        Log.v(responseData, "checkImageURL_responsedata")
+
+
         val json = JSON.parseObject(responseData)//TODO:完成对JSON错误处理
         return when (json.getIntValue("conclusionType")) {
             1 -> false
-            2 -> Check_level == Compliance_level    //不合规
-            3 -> Check_level == Suspected_level     //疑似
+            2 -> Config.checklevel == Compliance_level    //不合规
+            3 -> Config.checklevel == Suspected_level     //疑似
             4 -> {
+                Log.e("访问错误，以下是返回内容：$responseData", "checkImageURL_jsonvalue4")
                 //TODO:完成对访问错误的处理
                 isNormalRunning = false
                 false
             }
             else -> {
+                Log.e("访问错误，以下是返回内容：$responseData", "checkImageURL_jsonvalue?else")
                 //TODO:完成对网络error的处理
+                isNormalRunning = false
                 false
             }
         }
     }
 
-    fun DeleteMiraiImageCode(message: MessageChain): String {
-        //TODO:完成函数名称所示内容
-        return ""
-    }
 
 }
 

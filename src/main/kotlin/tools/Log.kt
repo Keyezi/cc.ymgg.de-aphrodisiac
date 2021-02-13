@@ -1,4 +1,6 @@
-package org.example.mirai.plugin
+package cc.ymgg.deaphrodisac.tools
+
+import cc.ymgg.deaphrodisac.MiraiPluginMain
 
 object Log {
     private const val VERBOSE = 1
@@ -10,6 +12,7 @@ object Log {
 
     var level = VERBOSE
     val MiraiLog = MiraiPluginMain.logger
+
 
     fun v(msg: String, title: String = "") {
         if (level <= VERBOSE) MiraiLog.verbose(cw(msg, title))
@@ -33,3 +36,4 @@ object Log {
 
     private fun cw(msg: String, title: String): String = if (title == "") msg else "[$title]$msg"
 }
+
