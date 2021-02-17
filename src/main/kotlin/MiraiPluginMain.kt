@@ -17,7 +17,7 @@ import net.mamoe.mirai.utils.info
 
 
 object MiraiPluginMain : KotlinPlugin(
-    JvmPluginDescription(id = "cc.ymgg.de-aphrodisiac", name = "Nd鉴黄", version = "2.0")
+    JvmPluginDescription(id = "cc.ymgg.de-aphrodisiac", name = "Nd鉴黄", version = "2.1")
 ) {
     override fun onEnable() {
         Config.reload()

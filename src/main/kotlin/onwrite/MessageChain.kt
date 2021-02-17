@@ -28,6 +28,7 @@ fun MessageChain.checkImage(): Boolean {
         }
     }
     Log.v(imageList.toString(), "imagelist")
+    if (imageList.isEmpty()) return false
     for (i in imageList) {
         if (BaiduChecker.checkImageURL(i)) return true
     }
