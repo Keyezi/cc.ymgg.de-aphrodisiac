@@ -8,7 +8,7 @@ import cc.ymgg.deaphrodisac.tools.Log
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 
-object regin : SimpleCommand(MiraiPluginMain, "regin", description = "设置APIkey") {
+object Regin : SimpleCommand(MiraiPluginMain, "regin", description = "设置APIkey") {
     @Handler
     suspend fun CommandSender.handle(client_id: String, client_secret: String) {
         Config.API_KEY = client_id
@@ -17,14 +17,14 @@ object regin : SimpleCommand(MiraiPluginMain, "regin", description = "设置APIkey
     }
 }
 
-object refreshtoken : SimpleCommand(MiraiPluginMain, "refreshtoken", description = "刷新AccessToken") {
+object Refreshtoken : SimpleCommand(MiraiPluginMain, "refreshtoken", description = "刷新AccessToken") {
     @Handler
     suspend fun CommandSender.handle() {
         BaiduChecker.refreshAccessToken()
     }
 }
 
-object changelevel : SimpleCommand(MiraiPluginMain, "changelevel", description = "刷新AccessToken") {
+object Changelevel : SimpleCommand(MiraiPluginMain, "changelevel", description = "修改审核级别") {
     @Handler
     suspend fun CommandSender.handle(level: Int) {
         when (level) {
@@ -36,4 +36,21 @@ object changelevel : SimpleCommand(MiraiPluginMain, "changelevel", description =
         }
     }
 
+}
+
+object Changeloglevel : SimpleCommand(MiraiPluginMain, "changeloglevel", description = "修改日志级别") {
+    @Handler
+    suspend fun CommandSender.handle(level: Int) {
+        if ((level > 6) or (level < 0)) {
+            MiraiPluginMain.logger.warning(
+                """[Log]请输入0-6的正确值。适当提升日志级别可加快处理速度。
+                |0:所有  1:VERBOSE-测试  2:DEBUG-调试  3:INFO-信息 4:WARNING-警告 5:ERROR-错误 6:None-无
+                |！：本指令LOG已绕过Log类进行输出日志
+            """.trimMargin()
+            )
+            return
+        }
+        Log.level = level
+        MiraiPluginMain.logger.info("[Log]修改日记级别为${level}成功。")
+    }
 }

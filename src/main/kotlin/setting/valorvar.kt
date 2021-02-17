@@ -1,6 +1,6 @@
 package cc.ymgg.deaphrodisac.setting
 
-val Compliance_level = 2  //确定
+val Compliance_level = 2  //不合规
 val Suspected_level = 3   //疑似
 var isNormalRunning = false
 //var runInMirai: Boolean = false

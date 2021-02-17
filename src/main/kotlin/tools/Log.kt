@@ -2,6 +2,7 @@ package cc.ymgg.deaphrodisac.tools
 
 import cc.ymgg.deaphrodisac.MiraiPluginMain
 
+@Suppress("unused")
 object Log {
     private const val VERBOSE = 1
     private const val DEBUG = 2
@@ -11,8 +12,7 @@ object Log {
 
 
     var level = VERBOSE
-    val MiraiLog = MiraiPluginMain.logger
-
+    private val MiraiLog = MiraiPluginMain.logger
 
     fun v(msg: String, title: String = "") {
         if (level <= VERBOSE) MiraiLog.verbose(cw(msg, title))
