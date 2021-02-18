@@ -8,7 +8,6 @@ import cc.ymgg.deaphrodisac.tools.Log
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 
-//todo:完成惩罚的指令
 
 object Regin : SimpleCommand(MiraiPluginMain, "regin", description = "设置APIkey") {
     @Handler
