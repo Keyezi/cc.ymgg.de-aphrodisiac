@@ -104,7 +104,7 @@ object BaiduChecker {
             3 -> Config.checklevel == Suspected_level     //疑似
             4 -> {
                 //TODO:完成对访问错误的处理2
-                isNormalRunning = false
+                //isNormalRunning = false
                 false
 
             }
@@ -146,7 +146,7 @@ object BaiduChecker {
             4 -> {
                 Log.e("访问错误，以下是返回内容：$responseData", "checkImageURL_jsonvalue4")
                 //TODO:完成对访问错误的处理
-                isNormalRunning = false
+                //  isNormalRunning = false
                 false
             }
             else -> {
