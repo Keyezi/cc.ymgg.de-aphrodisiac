@@ -29,7 +29,7 @@ object MiraiSMsgChecker {
         if (msg.checkImage() or msg.checkmsg()) {
             doMeasure(groupmsg)
         } else {
-            Log.v("检查完成，无视发生", "Docheck")
+            Log.v("检查完成，无事发生", "Docheck")
             return
         }
     }
