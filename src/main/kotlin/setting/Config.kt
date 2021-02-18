@@ -18,9 +18,8 @@ object Config : AutoSavePluginConfig("Configs") {
     @ValueDescription("是否撤回消息")
     var DeleteMsg by value<Boolean>()
 
-    /**是否禁言*/
-    @ValueDescription("是否禁言")
-
+    /**是否禁言（废弃）*/
+    @ValueDescription("是否禁言（废弃）")
     var Mute by value<Boolean>()
 
     /**禁言时间(以分钟计数)*/

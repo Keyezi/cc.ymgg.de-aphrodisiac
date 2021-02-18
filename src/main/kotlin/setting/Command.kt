@@ -8,6 +8,8 @@ import cc.ymgg.deaphrodisac.tools.Log
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 
+//todo:完成惩罚的指令
+
 object Regin : SimpleCommand(MiraiPluginMain, "regin", description = "设置APIkey") {
     @Handler
     suspend fun CommandSender.handle(client_id: String, client_secret: String) {
@@ -52,5 +54,22 @@ object Changeloglevel : SimpleCommand(MiraiPluginMain, "changeloglevel", descrip
         }
         Log.level = level
         MiraiPluginMain.logger.info("[Log]修改日记级别为${level}成功。")
+    }
+}
+
+object ChangeMeasure : SimpleCommand(MiraiPluginMain, "changemeasure", description = """修改惩罚方式""") {
+    @Handler
+    suspend fun CommandSender.handle(DeleteMsg: Boolean, KickOut: Boolean, Mutetime: Int) {
+        Config.DeleteMsg = DeleteMsg
+        Config.KickOut = KickOut
+        Config.Mutetime = Mutetime
+        Log.i(
+            """
+            已经修改撤回为：$DeleteMsg,
+            修改踢出为：$KickOut,
+            修改禁言时间为：$Mutetime(Minus)
+            !:禁言时间设置为0则不禁言
+            """, "修改惩罚"
+        )
     }
 }

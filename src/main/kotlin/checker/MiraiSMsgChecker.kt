@@ -38,10 +38,10 @@ object MiraiSMsgChecker {
     fun deleteMiraiImageCode(message: MessageChain): String =
         message.joinToString { if (it is PlainText) it.toString() else "" }
 
-    suspend fun doMeasure(groupmsg: GroupMessageEvent) {
+    private suspend fun doMeasure(groupmsg: GroupMessageEvent) {
         val sender = groupmsg.sender
         Log.i("群员${groupmsg.senderName}发送违规信息遭到惩罚")
-        if (Config.Mute) sender.mute(Config.Mutetime * 60)
+        if (Config.Mutetime != 0) sender.mute(Config.Mutetime * 60)
         if (Config.DeleteMsg) groupmsg.message.recall()
         if (Config.KickOut) groupmsg.group.getMember(sender.id)?.kick("消息检测惩罚")
     }
