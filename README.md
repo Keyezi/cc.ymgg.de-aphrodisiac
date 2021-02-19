@@ -26,3 +26,5 @@ description: 原来是酷Q应用，现在迁移到Mirai原生中。
 
 最后您可以使用`/changeloglevel`指令来设置本插件内的日志限制
 
+### 如果觉得好用请star一下
+
