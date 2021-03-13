@@ -11,7 +11,7 @@ mirai {
 }
 
 group = "cc.ymgg"
-version = "2.2"
+version = "2021.3"
 
 repositories {
     mavenLocal()
