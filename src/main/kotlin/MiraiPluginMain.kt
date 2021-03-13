@@ -4,16 +4,17 @@ package cc.ymgg.deaphrodisac
 
 import cc.ymgg.deaphrodisac.checker.BaiduChecker
 import cc.ymgg.deaphrodisac.checker.MiraiSMsgChecker
-import cc.ymgg.deaphrodisac.setting.*
+import cc.ymgg.deaphrodisac.setting.Config
+import cc.ymgg.deaphrodisac.setting.regCmd
+import cc.ymgg.deaphrodisac.setting.unRegCmd
 import cc.ymgg.deaphrodisac.tools.Log
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.unregister
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.utils.info
 
 
+@ConsoleExperimentalApi
 object MiraiPluginMain : KotlinPlugin(
     @OptIn(ConsoleExperimentalApi::class)
     JvmPluginDescription.loadFromResource()
@@ -23,11 +24,7 @@ object MiraiPluginMain : KotlinPlugin(
         logger.info { "插件已加载" }
         BaiduChecker.refreshAccessToken()
         MiraiSMsgChecker.getevent()
-        Regin.register()
-        Refreshtoken.register()
-        Changelevel.register()
-        Changeloglevel.register()
-        ChangeMeasure.register()
+        regCmd()
         if (!Config.first2use) {
             @Suppress("SpellCheckingInspection")
             Log.i(
@@ -48,11 +45,8 @@ object MiraiPluginMain : KotlinPlugin(
     }
 
     override fun onDisable() {
-        Regin.unregister()
-        Refreshtoken.unregister()
-        Changelevel.unregister()
-        Changeloglevel.unregister()
-        ChangeMeasure.unregister()
+        unRegCmd()
     }
 }
+
 

@@ -18,9 +18,9 @@ object Config : AutoSavePluginConfig("Configs") {
     @ValueDescription("是否撤回消息")
     var DeleteMsg by value<Boolean>()
 
-    /**是否禁言（废弃）*/
+    /*是否禁言（废弃）
     @ValueDescription("是否禁言（废弃）")
-    var Mute by value<Boolean>()
+    var Mute by value<Boolean>()*/
 
     /**禁言时间(以分钟计数)*/
     @ValueDescription("禁言时间(以分钟计数)")
@@ -33,6 +33,14 @@ object Config : AutoSavePluginConfig("Configs") {
     /**检查级别*/
     @ValueDescription("检查级别")
     var checklevel by value<Int>()
+
+    /**是否识别图片*/
+    @ValueDescription("是否识别图片")
+    var checkImage by value<Boolean>()
+
+    /**是否识别文字*/
+    @ValueDescription("是否识别文字")
+    var checkText by value<Boolean>()
 
     @ValueDescription("第一次使用，如果需要查看应用启动提示删除此内容即可")
     var first2use by value<Boolean>()

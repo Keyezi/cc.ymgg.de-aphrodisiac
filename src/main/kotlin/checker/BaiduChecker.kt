@@ -1,5 +1,6 @@
 package cc.ymgg.deaphrodisac.checker
 
+import cc.ymgg.deaphrodisac.http.PostUtil
 import cc.ymgg.deaphrodisac.setting.Compliance_level
 import cc.ymgg.deaphrodisac.setting.Config
 import cc.ymgg.deaphrodisac.setting.Suspected_level
@@ -7,9 +8,8 @@ import cc.ymgg.deaphrodisac.setting.isNormalRunning
 import cc.ymgg.deaphrodisac.tools.Log
 import com.alibaba.fastjson.JSON
 import com.google.gson.Gson
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import image.getImageFromURL
+import java.net.URL
 
 
 object BaiduChecker {
@@ -29,7 +29,7 @@ object BaiduChecker {
     /**通过2个从cloud.baidu.com获取的API密钥获取AccessTOken*/
     private fun getAccessToken(client_id: String, client_secret: String): String {
         //       Log.i(client_id,"ClinetId_getAccessToken")
-//        Log.i(client_secret,"Clinetsecret_getAccessToken")
+        //       Log.i(client_secret,"Clinetsecret_getAccessToken")
         when {
             client_id != "" -> {
             }
@@ -41,24 +41,17 @@ object BaiduChecker {
                 return ""
             }
         }
-
-        val Httpclient = OkHttpClient()
         val granttype = "client_credentials"
-        val requestBody = FormBody.Builder()
-            .add("client_id", client_id)
-            .add("client_secret", client_secret)
-            .add("grant_type", granttype)
-            .build()
-        val request = Request.Builder()
-            .url("https://aip.baidubce.com/oauth/2.0/token")
-            .post(requestBody)
-            .build()
-        val response = Httpclient.newCall(request).execute()
-        val responseData = response.body?.string()
+        val responseData = PostUtil().build {
+            URL("https://aip.baidubce.com/oauth/2.0/token")
+            add("client_id", client_id)
+            add("client_secret", client_secret)
+            add("grant_type", granttype)
+        }
 
         val json = Gson()
         val result = json.fromJson(responseData, ApiKeyRequest::class.java)
-        return if (result.access_token != null) {
+        return if (result.access_token != "") {
             Log.i("ApiKey读取成功，KEY:${result.access_token}")
             isNormalRunning = true
             result.access_token
@@ -78,23 +71,17 @@ object BaiduChecker {
         val session_secret: String
     )
 
-    /**输入消息字符串
+    /** 输入消息字符串
      *
      * 当审核出现问题返回真
      *
      * 当审核无问题或者出现网络错误返回假，并关闭应用处理直到成功refreshAccessToken*/
     fun checkmsg(Msg: String): Boolean {
         Log.v(Msg, "checkmsg_Msg")
-        val httpClient = OkHttpClient()
-        val requestBody = FormBody.Builder()
-            .add("text", Msg)
-            .build()
-        val request = Request.Builder()
-            .url("https://aip.baidubce.com/rest/2.0/solution/v1/text_censor/v2/user_defined?access_token=$accessToken")
-            .post(requestBody)
-            .build()
-
-        val responseData = httpClient.newCall(request).execute().body!!.string() //假设访问一定成功,只要网络连接没毛病
+        val responseData = PostUtil().build {
+            URL("https://aip.baidubce.com/rest/2.0/solution/v1/text_censor/v2/user_defined?access_token=$accessToken")
+            add("text", Msg)
+        }
         Log.v(responseData, "checkmsg_responseData")
         val json = JSON.parseObject(responseData)
         //TODO:完成对JSON错误处理
@@ -124,17 +111,21 @@ object BaiduChecker {
      * 当审核无问题或者出现网络错误返回假，并关闭应用处理直到成功refreshAccessToken*/
     fun checkImageURL(url: String): Boolean {
         Log.v(url, "checkImageURL_url")
-        val Httpclient = OkHttpClient()
-        val requestBody = FormBody.Builder()
-            .add("imgUrl", url)
-            .build()
+        val image = getImageFromURL(URL(url))
+        // Log.v("${image.height} \n ${image.width}","ImageX")
+        if ((image.height <= 128)
+            or (image.height >= 4096)
+            or (image.width <= 128)
+            or (image.height >= 4096)
+        ) {
+            Log.v("URL:$url 大小不符合要求，已经忽略。", this.javaClass.name)
+            return false
+        }
 
-        val request = Request.Builder()
-            .url("https://aip.baidubce.com/rest/2.0/solution/v1/img_censor/v2/user_defined?access_token=$accessToken")
-            .post(requestBody)
-            .build()
-        val responseData =
-            Httpclient.newCall(request).execute().body!!.string() //假设访问一定成功,只要网络连接没毛病
+        val responseData = PostUtil().build {
+            URL("https://aip.baidubce.com/rest/2.0/solution/v1/img_censor/v2/user_defined?access_token=$accessToken")
+            add("imgUrl", url)
+        }
         Log.v(responseData, "checkImageURL_responsedata")
 
 

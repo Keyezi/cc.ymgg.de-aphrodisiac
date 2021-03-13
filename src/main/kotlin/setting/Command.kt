@@ -4,10 +4,33 @@ package cc.ymgg.deaphrodisac.setting
 
 import cc.ymgg.deaphrodisac.MiraiPluginMain
 import cc.ymgg.deaphrodisac.checker.BaiduChecker
+import cc.ymgg.deaphrodisac.setting.Config.checkImage
+import cc.ymgg.deaphrodisac.setting.Config.checkText
 import cc.ymgg.deaphrodisac.tools.Log
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.unregister
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 
+fun regCmd() {
+    Regin.register()
+    Refreshtoken.register()
+    Changelevel.register()
+    Changeloglevel.register()
+    ChangeMeasure.register()
+    ToggleImageChk.register()
+    ToggleTextChk.register()
+}
+
+fun unRegCmd() {
+    Regin.unregister()
+    Refreshtoken.unregister()
+    Changelevel.unregister()
+    Changeloglevel.unregister()
+    ChangeMeasure.unregister()
+    ToggleImageChk.unregister()
+    ToggleTextChk.unregister()
+}
 
 object Regin : SimpleCommand(MiraiPluginMain, "regin", description = "…Ë÷√APIkey") {
     @Handler

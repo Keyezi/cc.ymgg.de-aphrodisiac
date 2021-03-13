@@ -4,7 +4,6 @@ import cc.ymgg.deaphrodisac.MiraiPluginMain
 import cc.ymgg.deaphrodisac.onwrite.checkImage
 import cc.ymgg.deaphrodisac.onwrite.checkmsg
 import cc.ymgg.deaphrodisac.setting.Config
-import cc.ymgg.deaphrodisac.setting.isNormalRunning
 import cc.ymgg.deaphrodisac.tools.Log
 import net.mamoe.mirai.contact.getMember
 import net.mamoe.mirai.event.events.GroupMessageEvent
@@ -19,12 +18,11 @@ object MiraiSMsgChecker {
 
         MiraiPluginMain.globalEventChannel().subscribeAlways<GroupMessageEvent> {
             doCheck(this)
-
         }
     }
 
     private suspend fun doCheck(groupmsg: GroupMessageEvent) {
-        if (!isNormalRunning) return
+       // if (!isNormalRunning) return
         val msg = groupmsg.message
         if (msg.checkImage() or msg.checkmsg()) {
             doMeasure(groupmsg)
@@ -44,6 +42,7 @@ object MiraiSMsgChecker {
         if (Config.Mutetime != 0) sender.mute(Config.Mutetime * 60)
         if (Config.DeleteMsg) groupmsg.message.recall()
         if (Config.KickOut) groupmsg.group.getMember(sender.id)?.kick("ÏûÏ¢¼ì²â³Í·£")
+        //if (Config.KickOut) groupmsg.sender
     }
 
 }
