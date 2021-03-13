@@ -95,3 +95,31 @@ object ChangeMeasure : SimpleCommand(MiraiPluginMain, "changemeasure", descripti
         )
     }
 }
+
+object ToggleTextChk : SimpleCommand(MiraiPluginMain, "toggleTextChk", description = "切换文字识别") {
+    @Handler
+    suspend fun CommandSender.handle(changeAble: Boolean?) {
+        if (changeAble != null) {
+            Log.i("文字识别模式设置为：$changeAble", "ToggleTextChk-hasVar")
+            checkText = changeAble  //toggleTextChk
+        } else {
+            Log.i("未提供参数，文字识别模式切换为：$changeAble", "ToggleTextChk-null")
+            checkText = !checkText //toggleTextChk true
+        }
+
+    }
+}
+
+object ToggleImageChk : SimpleCommand(MiraiPluginMain, "toggleImageChk", description = "切换图片识别") {
+    @Handler
+    suspend fun CommandSender.handle(changeAble: Boolean?) {
+        if (changeAble != null) {
+            Log.i("图片识别模式设置为：$changeAble", "ToggleImageChk-hasVar")
+            checkImage = changeAble
+        } else {
+            Log.i("未提供参数，图片识别模式切换为：$changeAble", "ToggleImageChk-null")
+            checkImage = !checkImage
+        }
+    }
+
+}
